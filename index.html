@@ -4,6 +4,8 @@
     <title>Web Development</title>
     <link rel="icon" href="https://seeklogo.com/images/P/pokeball-logo-DC23868CA1-seeklogo.com.png">
     <style>
+
+@import url('https://fonts.googleapis.com/css2?family=Chewy&family=Indie+Flower&family=Poppins:ital,wght@0,100;0,600;0,800;0,900;1,100&display=swap');
         * {
             overflow-x: hidden;
         }
@@ -52,7 +54,8 @@
       }
       
       h2 {
-        font-family: "Comic Sans MS", "Comic Sans", cursive;
+        font-family: 'Chewy', cursive;
+        letter-spacing: .2vw;
       }
       
       h3 {
@@ -63,7 +66,6 @@
       p {
         font-family: verdana;
         color: #242424;
-        line-height: 120%;
         overflow-wrap:break-word;
       }
       
@@ -128,10 +130,10 @@
     overflow:hidden;
   }
 
-  a {
+  footer a {
     transition: 0.2s ease;
   }
-      a:hover {
+      footer a:hover {
         opacity: 50%;
       }
 
@@ -192,6 +194,75 @@
         border-radius:10000vw;
         margin:2px;
       }
+
+      .toc {
+        border: 1px solid black;
+        border-radius: 10px;
+        width: 80%;
+        padding: 5%;
+        padding-top: calc(5% + 5px);
+        margin-left:5%;
+        margin-top:20px;
+        transition: 1s ease;
+        background:rgb(245,245,245);
+      }
+
+      .toc:hover {
+        background:white;
+      }
+      
+      .toc h2 {
+        margin:0;
+      }
+
+      .toc li {
+        line-height:17px;
+        padding-top: 5px;
+        padding-bottom:5px;
+      }
+
+      .toc li:nth-child(1) {
+        padding-top:none;
+      }
+
+
+      ol {
+        padding:0;
+      }
+
+      ol, li {
+        list-style-type: none;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+      }
+
+      .li {
+        display:none;
+      }
+
+      li:nth-child(-n+7) {
+        display:block !important;
+      }
+
+      button {
+        background-color: #fd746c;
+        color:white;
+        transition: 1s ease;
+        font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        padding-top:2%;
+        padding-bottom:2%;
+        padding-left: 3%;
+        padding-right: 3%;
+        border-radius:3px;
+        font-size:16px;
+        border: none;
+      }
+
+      button:hover {
+        background-color:#cb5e36;
+        transform: translate(-2px, -2px);
+        box-shadow: 4px 4px #ffaba7;
+      }
+
     </style>
   </head>
   <body>
@@ -200,8 +271,12 @@
       <div class='bannerText'><h1>The Ultimate PokeDex</h1></div>
     </div>
     <div class='firstSection' >
-      <div id="toc">
-
+      <div class="toc">
+        <h2>Table of Contents</h2>
+        <ol id="toc">
+          
+        </ol>
+        <button id='et' onclick="expand()">Expand</button>
       </div>
       <ul id="dex">
 
@@ -210,10 +285,34 @@
       <script src="pokedex_array.js"></script>
       <script>
 
+        var expanded = false;
+
+        function expand() {
+          console.log('in!')
+          expanded = !expanded;
+          if (expanded == true) {
+            console.log('here2')
+            console.log('these', document.body.getElementsByClassName("li"));
+            for (i = 0; i < document.body.getElementsByClassName("li").length; i++) {
+              document.body.getElementsByClassName("li")[i].style = "display: block;"
+            }
+            document.getElementById("et").innerText = 'Collapse';
+          } else {
+            document.body.getElementsByClassName("li").style = "display: none;"
+
+            for (i = 0; i < document.body.getElementsByClassName("li").length; i++) {
+              document.body.getElementsByClassName("li")[i].style = "display: none;"
+            }
+            document.getElementById("et").innerText = 'Expand';
+          }
+        }
+
         
 
         for (i=0;i<pokedex.length; i++) {
           let pokemon = document.createElement("item");
+          let tocPoke = document.createElement("li");
+
           poke = pokedex[i];
 
           let types = ``;
@@ -256,8 +355,18 @@
             return x.toPrecision(3);
           }
 
+          tocPoke.innerText = `${poke.num}. ${poke.name}`;
+
+          tocPoke.setAttribute('id',`$${poke.num}`);
+
+          tocPoke.onclick = () => {
+            window.location.href=tocPoke.id.replace("$","#");
+          }
+
+          tocPoke.classList.add("li");
+
           pokemon.innerHTML = `
-          <div class='item'>
+          <div class='item' id='${poke.num}'>
           <img src='${poke.img}' alt='Image could not load'>
           <div>
           <h2>${poke.name || "Unknown"}</h2>
@@ -270,7 +379,9 @@
           </div>
           </div>
           `;
+
           document.getElementById("dex").appendChild(pokemon);
+          document.getElementById("toc").appendChild(tocPoke);
         }
         
       </script>
